@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#101326"><title>Сломай правила — игра</title>
+<style>
+:root{color-scheme:dark;--bg:#101326;--panel:#1b2039;--line:#394264;--text:#f2f4ff;--muted:#b5bddb;--accent:#8c78ff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#222449 0,#101326 55%);font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:var(--text);min-height:100vh;padding:18px 12px 30px}.app{max-width:620px;margin:auto}.head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}.eyebrow{font-size:11px;letter-spacing:2px;color:#b9adff;font-weight:800}.title{font-size:clamp(23px,6vw,34px);font-weight:950;letter-spacing:-1px}.pill{background:#1c403d;color:#9effd9;padding:8px 12px;border-radius:30px;font-size:11px;font-weight:900;white-space:nowrap}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}.stat,.panel{background:#1a1e35;border:1px solid var(--line);border-radius:16px;padding:12px}.stat{text-align:center}.stat small{display:block;color:var(--muted);font-size:12px}.stat strong{font-size:23px}.arena{position:relative;border:1px solid #414a75;border-radius:18px;overflow:hidden;background:#0a0d1c}.arena canvas{display:block;width:100%;height:auto;touch-action:none}.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.btn{border:1px solid #4c567e;background:#293150;color:white;padding:12px 10px;border-radius:12px;font-weight:800;font-size:14px;cursor:pointer;touch-action:manipulation}.btn:active{transform:scale(.98);filter:brightness(1.2)}.primary{background:linear-gradient(135deg,#7761f3,#5944bf);border-color:#9a8cff}.panel{margin-top:12px}.panelhead{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}.panelhead strong{font-size:18px}.muted{font-size:12px;color:var(--muted)}label{display:block;font-size:13px;margin:12px 0 4px;color:#e0e3ff}label output{float:right;color:#c3b9ff;font-weight:800}input[type=range]{width:100%;accent-color:#9c8bff}.checks{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.check{display:flex;align-items:center;gap:7px;background:#242a46;padding:9px;border-radius:10px;font-size:12px}.check input{accent-color:#9c8bff;width:17px;height:17px}.modes{display:grid;grid-template-columns:1fr 1fr;gap:8px}.message{margin-top:9px;color:#c5cbed;font-size:12px;line-height:1.5;min-height:18px}.tip{text-align:center;color:#9da7ca;font-size:12px;margin:13px 0}.footer{text-align:center;color:#697397;font-size:11px;margin-top:18px}@media(min-width:520px){body{padding-top:28px}.stat,.panel{padding:14px}}
+</style>
+</head>
+<body><main class="app">
+<header class="head"><div><div class="eyebrow">АРКАДА • ТВОИ ПРАВИЛА</div><div class="title">⚡ СЛОМАЙ ПРАВИЛА</div></div><div class="pill" id="status">ГОТОВ</div></header>
+<section class="stats"><div class="stat"><small>Очки</small><strong id="score">0</strong></div><div class="stat"><small>Жизни</small><strong id="lives">3</strong></div><div class="stat"><small>Рекорд</small><strong id="best">0</strong></div></section>
+<div class="arena"><canvas id="game" width="360" height="430" aria-label="Игровое поле"></canvas></div>
+<div class="actions"><button class="btn primary" id="start">▶ Начать игру</button><button class="btn" id="pause">Ⅱ Пауза</button><button class="btn" id="left">◀ Влево</button><button class="btn" id="right">Вправо ▶</button></div>
+<section class="panel"><div class="panelhead"><strong>🧪 Лаборатория правил</strong><span class="muted">Меняй на ходу</span></div>
+<label>Скорость препятствий <output id="speedOut">5</output></label><input id="speed" type="range" min="1" max="10" value="5">
+<label>Частота препятствий <output id="rateOut">5</output></label><input id="rate" type="range" min="1" max="10" value="5">
+<label>Жизни при старте <output id="lifeOut">3</output></label><input id="life" type="range" min="1" max="10" value="3">
+<label>Размер игрока <output id="sizeOut">24</output></label><input id="size" type="range" min="14" max="38" value="24">
+<div class="checks"><label class="check"><input id="reverse" type="checkbox"> 🙃 Обратное управление</label><label class="check"><input id="bounce" type="checkbox"> 🌀 Отскок от стен</label><label class="check"><input id="gold" type="checkbox"> ✨ Золотые бонусы</label><label class="check"><input id="shield" type="checkbox"> 🛡 Щит (1 удар)</label></div>
+<button class="btn primary" id="apply" style="width:100%;margin-top:12px">⚡ Применить новые правила</button><div class="message" id="message">Уворачивайся от блоков. Правила можно менять в любой момент!</div></section>
+<section class="panel"><div class="panelhead"><strong>🎲 Быстрые режимы</strong></div><div class="modes"><button class="btn" data-mode="easy">🐢 Спокойный</button><button class="btn" data-mode="hard">🔥 Хаос</button><button class="btn" data-mode="reverse">🙃 Наоборот</button><button class="btn" data-mode="random">🎲 Случайные правила</button></div></section>
+<div class="tip">На телефоне веди пальцем по полю или используй кнопки. Собирай золото и побей рекорд!</div><div class="footer">Сломай правила • мини-игра для телефона</div>
+</main>
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id),canvas=$('game'),ctx=canvas.getContext('2d');
+let running=false,over=false,score=0,lives=3,player={x:168,y:365},blocks=[],coins=[],tick=0,spawn=0,invuln=0,shieldCharges=0,last=0,raf=0,pointer=false,keys={};
+let rules={speed:5,rate:5,life:3,size:24,reverse:false,bounce:false,gold:false,shield:false};
+let best=0;try{best=+(localStorage.getItem('slomai-best')||0)}catch(e){} $('best').textContent=best;
+function readRules(){return {speed:+$('speed').value,rate:+$('rate').value,life:+$('life').value,size:+$('size').value,reverse:$('reverse').checked,bounce:$('bounce').checked,gold:$('gold').checked,shield:$('shield').checked}}
+function labels(){['speed','rate','life','size'].forEach(k=>$(k+'Out').textContent=$(k).value)}
+['speed','rate','life','size'].forEach(k=>$(k).addEventListener('input',labels));
+function apply(){rules=readRules();if(!running&&!over)lives=rules.life;if(rules.shield&&shieldCharges===0)shieldCharges=1;$('lives').textContent=lives;$('message').textContent='Готово! Новые правила уже действуют.'}
+$('apply').onclick=apply;
+function mode(m){if(m==='easy'){$('speed').value=2;$('rate').value=2;$('life').value=5;$('size').value=30;$('reverse').checked=false;$('bounce').checked=false;$('gold').checked=true;$('shield').checked=true}
+if(m==='hard'){$('speed').value=9;$('rate').value=9;$('life').value=2;$('size').value=18;$('reverse').checked=false;$('bounce').checked=true;$('gold').checked=false;$('shield').checked=false}
+if(m==='reverse')$('reverse').checked=!$('reverse').checked;
+if(m==='random'){$('speed').value=1+Math.random()*9|0;$('rate').value=1+Math.random()*9|0;$('life').value=1+Math.random()*7|0;$('size').value=14+Math.random()*25|0;['reverse','bounce','gold','shield'].forEach(k=>$(k).checked=Math.random()>.5)}
+labels();apply();$('message').textContent='Режим включён: '+({easy:'Спокойный',hard:'Хаос',reverse:'Наоборот',random:'Случайные правила'}[m])}
+document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>mode(b.dataset.mode));
+function reset(){score=0;lives=rules.life;player.x=168;blocks=[];coins=[];tick=spawn=invuln=0;shieldCharges=rules.shield?1:0;over=false;running=true;$('score').textContent=0;$('lives').textContent=lives;$('status').textContent='ИГРА';$('start').textContent='↻ Заново';$('pause').textContent='Ⅱ Пауза';$('message').textContent='Поехали! Меняй правила прямо во время игры.';last=0;cancelAnimationFrame(raf);raf=requestAnimationFrame(loop)}
+$('start').onclick=()=>{apply();reset()};
+$('pause').onclick=()=>{if(over)return;running=!running;$('status').textContent=running?'ИГРА':'ПАУЗА';$('pause').textContent=running?'Ⅱ Пауза':'▶ Продолжить';if(running){last=0;raf=requestAnimationFrame(loop)}else{cancelAnimationFrame(raf);draw()}};
+function move(dir){let d=dir*(rules.reverse?-1:1);player.x+=d*24;player.x=Math.max(0,Math.min(360-rules.size,player.x))}
+$('left').onpointerdown=e=>{e.preventDefault();move(-1)};$('right').onpointerdown=e=>{e.preventDefault();move(1)};
+canvas.addEventListener('pointerdown',e=>{pointer=true;canvas.setPointerCapture(e.pointerId);aim(e)});canvas.addEventListener('pointermove',e=>{if(pointer)aim(e)});canvas.addEventListener('pointerup',()=>pointer=false);canvas.addEventListener('pointercancel',()=>pointer=false);
+function aim(e){const r=canvas.getBoundingClientRect();player.x=Math.max(0,Math.min(360-rules.size,(e.clientX-r.left)/r.width*360-rules.size/2))}
+window.addEventListener('keydown',e=>{if(['ArrowLeft','ArrowRight','a','d','A','D'].includes(e.key)){keys[e.key]=true;e.preventDefault()}});window.addEventListener('keyup',e=>keys[e.key]=false);
+function hit(a,b){return a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y}
+function loseLife(){if(invuln>0)return;if(shieldCharges>0){shieldCharges--;invuln=75;$('message').textContent='Щит спас тебя от удара!';return}lives--;$('lives').textContent=lives;invuln=55;if(lives<=0){running=false;over=true;$('status').textContent='ФИНИШ';$('message').textContent='Игра окончена! Измени правила и попробуй снова.';$('start').textContent='↻ Играть снова';if(score>best){best=score;$('best').textContent=best;try{localStorage.setItem('slomai-best',best)}catch(e){}}}}
+function draw(){ctx.clearRect(0,0,360,430);ctx.fillStyle='#0b0e20';ctx.fillRect(0,0,360,430);ctx.strokeStyle='#202747';for(let x=0;x<360;x+=30){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,430);ctx.stroke()}for(let y=0;y<430;y+=30){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(360,y);ctx.stroke()}
+coins.forEach(a=>{ctx.beginPath();ctx.fillStyle='#ffda58';ctx.shadowColor='#ffd44d';ctx.shadowBlur=13;ctx.arc(a.x,a.y,7,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0});
+blocks.forEach(a=>{ctx.fillStyle=a.color;ctx.shadowColor=a.color;ctx.shadowBlur=9;ctx.fillRect(a.x,a.y,a.w,a.h);ctx.shadowBlur=0;ctx.strokeStyle='#ffffff55';ctx.strokeRect(a.x+2,a.y+2,a.w-4,a.h-4)});
+ctx.fillStyle=invuln>0&&Math.floor(invuln/4)%2?'#fff':'#a99aff';ctx.shadowColor='#9985ff';ctx.shadowBlur=18;ctx.fillRect(player.x,player.y,rules.size,rules.size);ctx.shadowBlur=0;ctx.fillStyle='#242044';ctx.fillRect(player.x+5,player.y+6,4,4);ctx.fillRect(player.x+rules.size-9,player.y+6,4,4);ctx.fillRect(player.x+6,player.y+rules.size-7,Math.max(4,rules.size-12),3);
+if(!running){ctx.fillStyle='#070a1bdc';ctx.fillRect(0,155,360,100);ctx.textAlign='center';ctx.fillStyle='#fff';ctx.font='bold 22px system-ui';ctx.fillText(over?'ИГРА ОКОНЧЕНА':score?'ПАУЗА':'ГОТОВ К ИГРЕ',180,195);ctx.font='13px system-ui';ctx.fillStyle='#c5cbed';ctx.fillText(over?'Меняй правила и сыграй ещё':'Нажми «Начать игру»',180,220)}}
+function loop(now){if(!running){draw();return}if(!last)last=now;let dt=Math.min((now-last)/16.67,2);last=now;tick+=dt;if(invuln>0)invuln-=dt;
+if(keys.ArrowLeft||keys.a||keys.A)move(-dt*.65);if(keys.ArrowRight||keys.d||keys.D)move(dt*.65);player.x=Math.max(0,Math.min(360-rules.size,player.x));
+spawn+=dt;let interval=Math.max(8,45-rules.rate*3);if(spawn>=interval){spawn=0;let w=18+Math.random()*24;blocks.push({x:Math.random()*(360-w),y:-25,w,h:14+Math.random()*16,color:['#ff5876','#ff9c50','#6de0cb','#7d9cff'][Math.random()*4|0],v:rules.speed*(.65+Math.random()*.5)})}
+if(rules.gold&&Math.random()<.008*dt)coins.push({x:12+Math.random()*336,y:-10});
+blocks.forEach(a=>a.y+=a.v*dt);coins.forEach(a=>a.y+=rules.speed*.7*dt);
+const p={x:player.x,y:player.y,w:rules.size,h:rules.size};blocks=blocks.filter(a=>{if(hit(p,a)){loseLife();return false}return a.y<435});coins=coins.filter(a=>{if(hit(p,{x:a.x-7,y:a.y-7,w:14,h:14})){score+=5;$('score').textContent=score;return false}return a.y<440});
+if(rules.bounce&&(player.x<=0||player.x+rules.size>=360)){player.x=Math.max(0,Math.min(360-rules.size,player.x));keys.ArrowLeft=keys.ArrowRight=keys.a=keys.d=false}
+draw();if(running)raf=requestAnimationFrame(loop)}
+labels();draw();
+})();
+</script></body></html>
